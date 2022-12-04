@@ -117,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Sejong Festival Helper',
+                    'FestivalHelper\n부스관리자',
                     textAlign: TextAlign.center,
                     style: FlutterFlowTheme.of(context).title1,
                   ),
@@ -131,44 +131,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 80, 0, 0),
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            Padding(
-                              padding:
-                              EdgeInsetsDirectional.fromSTEB(0, 2, 0, 20),
-                              child: FFButtonWidget(
-                                onPressed: () async {/*
-                                  await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => RegisterWidget(),
-                                    ),
-                                  );
-                                */},
-                                text: 'Register',
-                                options: FFButtonOptions(
-                                  width: 200,
-                                  height: 50,
-                                  color: Color(0xFFC30E2E),
-                                  textStyle: FlutterFlowTheme.of(context)
-                                      .subtitle2
-                                      ?.override(
-                                    fontFamily: 'Outfit',
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  elevation: 3,
-                                  borderSide: BorderSide(
-                                    color: Colors.transparent,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              )/*.animateOnPageLoad(
-                                  animationsMap['buttonOnPageLoadAnimation1']!)*/,
-                            ),
+
                             FFButtonWidget(
                               onPressed: () async {
                                 await Navigator.push(

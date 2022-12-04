@@ -47,42 +47,16 @@ class _ValidQRWidgetState extends State<ValidQRWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Valid QR Code!',
+                '인증되었습니다!',
                 textAlign: TextAlign.center,
-                style: FlutterFlowTheme.of(context).title3,
+                style: FlutterFlowTheme.of(context).title2?.override(color: Colors.white),
               ),
             ],
           ),
         ),
         Text(
-          'Permission Level : $id',
+          '권한 레벨 : $id',
           style: FlutterFlowTheme.of(context).bodyText1,
-        ),
-        Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
-          child: FFButtonWidget(
-            onPressed: () async {
-              Navigator.pop(context);
-            },
-            text: 'Check Stamp',
-            options: FFButtonOptions(
-              width: 170,
-              height: 50,
-              color: Color(0xFFC30E2E),
-              textStyle: FlutterFlowTheme.of(context).subtitle2?.override(
-                fontFamily: 'Lexend Deca',
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.normal,
-              ),
-              elevation: 2,
-              borderSide: BorderSide(
-                color: Colors.transparent,
-                width: 1,
-              ),
-              borderRadius: BorderRadius.circular(40),
-            ),
-          ),
         ),
       ],
     );

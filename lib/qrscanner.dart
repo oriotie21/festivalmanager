@@ -64,7 +64,6 @@ class _QrScanner extends State<QrScanner> {
           onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
         ),
       ),
-      if (result != null) Text(msg.toString()) else Text("NULL")
     ]);
   }
 
@@ -74,26 +73,29 @@ class _QrScanner extends State<QrScanner> {
     });
     controller.scannedDataStream.listen((scanData) async {
       controller.pauseCamera();
-      UserCredential user = UserCredential();
       setState(() {
         result = scanData;
       });
       //코드 인증 받아서 0은 실패, 1~는 일반인, 재학생, 이런 순서대로 진행할것
-      String? name = await user.getUsername();
      try {
+       //스캔한 json 데이터 담는 변수
+       UserCredential user = UserCredential();
        Map<String, dynamic> r = jsonDecode(result!.code!);
-       r['managername'] = name;
+       r['booth_id'] = await user.getBoothID();
+
+       String payload = jsonEncode(r);
+       Logger().v(payload);
        http.Response response =
        await http.post(Uri.parse(ServerInfo.addr + "/api/otp/auth"),
            headers: {"Content-Type": "application/json"},
            //포맷 : {"username" : "sejong", "otppass" : "123456"}
            body: jsonEncode(r)).timeout(Duration(seconds: 1));
-
+        Logger().v(response.body);
       if (response.body == null) {
     //유효하지 않은 코드
       } else {
         Map<String, dynamic> content = jsonDecode(response.body);
-        int id = content["response"];
+        int id = content["permission"];
         //id에 따라서 메시지 다르게 출력
         switch(id){
           case 0:

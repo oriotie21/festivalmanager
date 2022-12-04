@@ -33,7 +33,7 @@ class _EditBoothWidgetState extends State<EditBoothWidget> {
     super.initState();
     textController1 = TextEditingController();
     textController2 = TextEditingController(text: ' ');
-    getData();
+    //getData();
   }
 
   @override
@@ -47,36 +47,36 @@ class _EditBoothWidgetState extends State<EditBoothWidget> {
 
     UserCredential credential = await UserCredential();
     Map<String, dynamic> reqbody = Map<String, dynamic>();
-    String? jwttoken = await credential.getToken();
+    String? jwttoken = await credential.getAccessToken();
     String token_type = "bearer";
     String? username = await credential.getUsername(); //얘때문에
     http.Response resp = await http.get(Uri.parse(ServerInfo.addr+"/booth/info?"+
         "jwttoken="+jwttoken!+"&token_type="+token_type+"&username="+username!),
     );
-  //  setState(() {
+    setState(() {
       boothData = jsonDecode(resp.body);
       textController1?.text = boothData['name'];
       textController2?.text = boothData['description'];
-  //  });
+    });
 
 
   }
   void setData() async {
+    UserCredential credential = UserCredential();
+    int? boothId = await credential.getBoothID();
+      http.Response resp = await http.put(Uri.parse(ServerInfo.addr+"/api/booth/"+boothId.toString()),
+        headers: {"Content-Type" : "application/json"},  body : jsonEncode({"name" : textController1?.text.toString() ,
+          "description" : textController2?.text.toString()
+          }),
+          );
+      if(resp.statusCode == 200){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("업데이트 성공")));
+      }else{
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(resp.body)));
+      }
 
-    UserCredential credential = await UserCredential();
-    Map<String, dynamic> reqbody = Map<String, dynamic>();
-    String? jwttoken = await credential.getToken();
-    String token_type = "bearer";
-    String? username = await credential.getUsername(); //얘때문에
-    reqbody["jwttoken"] = jwttoken;
-    reqbody["token_type"] = token_type;
-    reqbody["username"] = username;
-    reqbody["name"] = textController1?.text.toString();
-    reqbody["description"] = textController2?.text.toString();
-    http.Response resp = await http.put(Uri.parse(ServerInfo.addr+"/booth/info"),
-      headers: {"Content-Type": "application/json"},
-        body: jsonEncode(reqbody)
-    );
+
+
     //  setState(() {
     //  });
 
@@ -148,8 +148,8 @@ class _EditBoothWidgetState extends State<EditBoothWidget> {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16, 12, 0, 0),
                                 child: Text(
-                                  '부스 정보를 수정할 수 있습니다',
-                                  style: FlutterFlowTheme.of(context).bodyText2,
+                                  '부스 정보 수정',
+                                  style: FlutterFlowTheme.of(context).title2,
                                 ),
                               ),
                               Padding(
@@ -217,7 +217,7 @@ class _EditBoothWidgetState extends State<EditBoothWidget> {
                                     labelText: '부스 소개',
                                     labelStyle:
                                     FlutterFlowTheme.of(context).subtitle2,
-                                    hintText: 'Your email...',
+                                    hintText: ' ',
                                     hintStyle:
                                     FlutterFlowTheme.of(context).subtitle2,
                                     enabledBorder: OutlineInputBorder(
@@ -277,45 +277,6 @@ class _EditBoothWidgetState extends State<EditBoothWidget> {
                                           padding:
                                           EdgeInsetsDirectional.fromSTEB(
                                               0, 0, 0, 26),
-                                          child: FFButtonWidget(
-                                            onPressed: () async {/*
-                                              final usersUpdateData =
-                                              createUsersRecordData(
-                                                displayName:
-                                                textController1!.text,
-                                                email: textController2!.text,
-                                              );
-                                              await columnUsersRecord.reference
-                                                  .update(usersUpdateData);
-                                              Navigator.pop(context);
-                                              */
-                                            },
-                                            text: '취소하기',
-                                            options: FFButtonOptions(
-                                              width: 230,
-                                              height: 50,
-                                              color:
-                                              FlutterFlowTheme.of(context)
-                                                  .primaryBackground,
-                                              textStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .subtitle1
-                                                  ?.override(
-                                                fontFamily: 'Outfit',
-                                                color:
-                                                FlutterFlowTheme.of(
-                                                    context)
-                                                    .tertiaryColor,
-                                              ),
-                                              elevation: 3,
-                                              borderSide: BorderSide(
-                                                color: Colors.transparent,
-                                                width: 1,
-                                              ),
-                                              borderRadius:
-                                              BorderRadius.circular(8),
-                                            ),
-                                          ),
                                         ),
                                         Padding(
                                           padding:
@@ -324,6 +285,7 @@ class _EditBoothWidgetState extends State<EditBoothWidget> {
                                           child: FFButtonWidget(
                                             onPressed: () async {
                                               setData();
+
                                               /*
                                               final usersUpdateData =
                                               createUsersRecordData(

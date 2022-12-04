@@ -27,7 +27,6 @@ class _InvalidQRWidgetState extends State<InvalidQRWidget> {
   @override
   Widget build(BuildContext context) {
     Timer timer = Timer(Duration(seconds: widget.destroyTime), () => Navigator.pop(context));
-    Logger().v(widget.destroyTime);
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -45,43 +44,14 @@ class _InvalidQRWidgetState extends State<InvalidQRWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Invalid QR Code!',
+                '인증에 실패했습니다',
                 textAlign: TextAlign.center,
-                style: FlutterFlowTheme.of(context).title3,
+                style: FlutterFlowTheme.of(context).title2?.override(color: Colors.white),
               ),
             ],
           ),
         ),
-        Text(
-          'It will not be stamped :(',
-          style: FlutterFlowTheme.of(context).bodyText1,
-        ),
-        Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
-          child: FFButtonWidget(
-            onPressed: () async {
-              Navigator.pop(context);
-            },
-            text: 'ReCheck QR Code',
-            options: FFButtonOptions(
-              width: 170,
-              height: 50,
-              color: Color(0xFFC30E2E),
-              textStyle: FlutterFlowTheme.of(context).subtitle2?.override(
-                fontFamily: 'Lexend Deca',
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.normal,
-              ),
-              elevation: 2,
-              borderSide: BorderSide(
-                color: Colors.transparent,
-                width: 1,
-              ),
-              borderRadius: BorderRadius.circular(40),
-            ),
-          ),
-        ),
+
       ],
     );
   }

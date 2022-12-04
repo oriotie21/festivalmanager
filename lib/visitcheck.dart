@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:festivalmanager/ServerInfo.dart';
 import 'package:festivalmanager/UserManager.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 
 import '../flutter_flow/flutter_flow_icon_button.dart';
@@ -24,21 +25,17 @@ class VisitCheckWidget extends StatefulWidget {
 class _VisitCheckWidgetState extends State<VisitCheckWidget>
     with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  UserCredential userCredential = UserCredential();
 
-  List<Map<String, dynamic>> visitLog = <Map<String, dynamic>>[];
+  List visitLog = [];
   List<int> visitBoothIdList = <int>[];
+  //나의 부스 방문 기록
   Future<void> loadVisitLog() async {
-    http.Response resp = await http.get(Uri.parse(ServerInfo.addr +
-        "/visits/booth?" +
-        "jwttoken=" +
-        (await userCredential.getToken())! +
-        "&token_type=" +
-        "bearer" +
-        "&username=" +
-        (await userCredential.getUsername())!));
-    visitLog = await new List<Map<String, dynamic>>.from(
-        jsonDecode(resp.body)["response"]);
+    UserCredential user = UserCredential();
+    int? bid = await user.getBoothID();
+    Logger().v(bid);
+    http.Response resp = await http.get(Uri.parse(ServerInfo.addr +"/api/visits/booth/"+bid.toString()));
+    Logger().v(resp.body);
+    visitLog = jsonDecode(resp.body);
   }
 
   @override
@@ -113,7 +110,7 @@ class _VisitCheckWidgetState extends State<VisitCheckWidget>
                     itemCount: visitLog.length,
                     itemBuilder: (context, listViewIndex) {
                       Logger().v(visitLog.length);
-                      Map<String, dynamic> visit =
+                      var visit =
                           visitLog.elementAt(listViewIndex);
                       int visitId = visit["id"];
                       visitBoothIdList.add(visitId);
@@ -147,7 +144,7 @@ class _VisitCheckWidgetState extends State<VisitCheckWidget>
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "#$visitId" + visit["username"],
+                                        "#$visitId " + visit["user_id"].toString()+"번째 유저",
                                         style:
                                             FlutterFlowTheme.of(context).title2,
                                       ),
@@ -159,8 +156,7 @@ class _VisitCheckWidgetState extends State<VisitCheckWidget>
                                                 EdgeInsetsDirectional.fromSTEB(
                                                     0, 4, 0, 0),
                                             child: Text(
-                                              UserCredential
-                                                  .rank[visit["permission"]],
+                                              DateFormat("yyyy-MM-dd HH:MM:ss").format(DateTime.parse(visit["start_time"])),
                                               style:
                                                   FlutterFlowTheme.of(context)
                                                       .subtitle2,
@@ -177,6 +173,7 @@ class _VisitCheckWidgetState extends State<VisitCheckWidget>
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
+                                  Text("스탬프 찍기"),
                                   Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
@@ -186,15 +183,15 @@ class _VisitCheckWidgetState extends State<VisitCheckWidget>
                                         child: FFButtonWidget(
                                           onPressed: () async{
                                             UserCredential credential = await UserCredential();
-                                            http.Response resp = await http.put( Uri.parse(ServerInfo.addr+"/visits/stamp?"
-                                            +"jwttoken="+(await credential.getToken())!+"&token_type="+"bearer"+"&visitid="+visitBoothIdList.elementAt(listViewIndex).toString()));
+                                            http.Response resp = await http.put( Uri.parse(ServerInfo.addr+"/api/visits/"+visitBoothIdList.elementAt(listViewIndex).toString()));
+                                            visitBoothIdList.removeAt(listViewIndex);
                                             setState(() {
                                             });
                                           },
                                           text: 'Edit',
                                           icon: Icon(
-                                            Icons.check,
-                                            size: 15,
+                                            Icons.approval,
+                                            size: 35,
                                           ),
                                           options: FFButtonOptions(
                                             width: 50,
@@ -216,14 +213,14 @@ class _VisitCheckWidgetState extends State<VisitCheckWidget>
                                           ),
                                         ),
                                       ),
-                                      Padding(
+                                      /*Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             0, 0, 10, 0),
                                         child: FFButtonWidget(
                                           onPressed: () async{
                                             UserCredential credential = await UserCredential();
                                             http.Response resp = await http.delete( Uri.parse(ServerInfo.addr+"/visits/stamp?"
-                                                +"jwttoken="+(await credential.getToken())!+"&token_type="+"bearer"+"&visitid="+visitBoothIdList.elementAt(listViewIndex).toString()));
+                                                +"jwttoken="+(await credential.getAccessToken())!+"&token_type="+"bearer"+"&visitid="+visitBoothIdList.elementAt(listViewIndex).toString()));
                                             visitBoothIdList.removeAt(listViewIndex);
                                             setState(() {
                                             });
@@ -243,21 +240,17 @@ class _VisitCheckWidgetState extends State<VisitCheckWidget>
                                                     .subtitle2
                                                     ?.override(
                                                       fontFamily: 'Outfit',
-                                                      color: Colors.white,
-                                                    ),
-                                            borderSide: BorderSide(
-                                              color: Colors.transparent,
                                               width: 1,
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(8),
                                           ),
                                         ),
-                                      ),
+                                      ),*/
                                     ],
                                   ),
                                 ],
-                              ) : Text("인증 완료"),
+                              ) : Text("인증 왼료"),
                             ],
                           ),
                         ),

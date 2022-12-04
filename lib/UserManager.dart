@@ -16,24 +16,56 @@ class UserCredential{
     r = await pref?.getString(key);
     return r;
   }
-  Future<void> setStrAtPref(String key, String s) async{
+  void setStrAtPref(String key, String s) async{
     pref = await SharedPreferences.getInstance();
     pref?.setString(key, s);
   }
-  Future<String?> getToken() async{
-    Logger().v("gettoken");
-    return (await getStrFromPref("token"));
+  Future<String?> getSession() async{
+    return (await getStrFromPref("session"));
   }
-  Future<void> setToken(String s) async {
-    Logger().v("settoken");
-    await setStrAtPref("token", s);
+  void setSession(String s) async{
+    setStrAtPref("session", s);
   }
   Future<String?> getUsername() async{
-    Logger().v("get");
-    return ( await getStrFromPref("name"));
+    String? r = await getStrFromPref("name");
+    return r;
   }
-  Future<void> setUsername(String s) async {
-    Logger().v("set");
-    await setStrAtPref("name", s);
+  void setUsername(String s){
+    setStrAtPref("name", s);
   }
+
+  Future<String?> getOtpKey() async{
+    String? r = await getStrFromPref("otpkey");
+    return r;
+  }
+  void setOtpKey(String s) async{
+    setStrAtPref("otpkey", s);
+  }
+
+  Future<String?> getAccessToken() async{
+    String? r = await getStrFromPref("access_token");
+    return r;
+  }
+  void setAccessToken(String s) async{
+    setStrAtPref("access_token", s);
+  }
+
+  Future<String?> getTokenType() async{
+    String? r = await getStrFromPref("token_type");
+    return r;
+  }
+  void setTokenType(String s) async{
+    setStrAtPref("token_type", s);
+  }
+
+  Future<int?> getBoothID() async{
+    pref = await SharedPreferences.getInstance();
+    int? r = await pref?.getInt("booth_id");
+    return r;
+  }
+  void setBoothID(int s) async{
+    pref = await SharedPreferences.getInstance();
+    pref?.setInt('booth_id', s);
+  }
+
 }

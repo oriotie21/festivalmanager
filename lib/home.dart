@@ -17,7 +17,7 @@ class HomePageWidget extends StatefulWidget {
 
 class _HomePageWidgetState extends State<HomePageWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  List<Widget> pageList = <Widget>[EditBoothWidget(),CheckQRWidget(), VisitCheckWidget(), CheckQRWidget()];
+  List<Widget> pageList = <Widget>[EditBoothWidget(),CheckQRWidget(), VisitCheckWidget()];
   int pageIndex = 0;
 
   @override
@@ -46,7 +46,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           FloatingNavbarItem(icon: Icons.store_outlined, ),
           FloatingNavbarItem(icon: Icons.qr_code, ),
           FloatingNavbarItem(icon: Icons.checklist,),
-          FloatingNavbarItem(icon: Icons.person,),
+         // FloatingNavbarItem(icon: Icons.person,),
         ],
       ),
 
